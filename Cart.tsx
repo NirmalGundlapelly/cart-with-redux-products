@@ -17,61 +17,42 @@ import {
   verticalScale,
 } from '../../../../dimensions/Matrices';
 import {RootState} from '../../../../redux/store';
-import {incrementCartItemQuantity, decrementCartItemQuantity} from '../../../../redux/slices/cartSlice'
+import {
+  incrementCartItemQuantity,
+  decrementCartItemQuantity,
+} from '../../../../redux/slices/cartSlice';
 import STRINGS from '../../config';
 import {connect} from 'react-redux';
 
 class Cart extends CartController {
   renderProductItem = (item: any) => {
-    console.log('item', item)
+    console.log('item', item);
     return (
       <>
         <TouchableHighlight>
           <View style={styles.productItem}>
             <View style={styles.itemCardContainer}>
-              <Image style={styles.thumbnail} source={{uri: item.thumbnail}}/>
+              <Image style={styles.thumbnail} source={{uri: item.thumbnail}} />
               <View style={styles.itemPriceContainer}>
                 <Text style={styles.itemTitleText}>{item.title}</Text>
-                <Text style={styles.itemPrice}>${item.price}.00</Text>
+                <Text style={styles.itemPrice}>
+                  ${item.price * item.quantity}.00
+                </Text>
                 <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => 
-                {
-                  if (item.quantity >= 1){
-                    this.props.decrementCartItemQuantity(item)}
-                  }
-                }
-              style={{
-                width: 40,
-                height: 50,
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 30}}>-</Text>
-            </TouchableOpacity>
-            <Text
-              style={{
-                backgroundColor: 'white',
-                width: 40,
-                height: 45,
-                textAlign: 'center',
-                paddingTop: 13,
-              }}>
-              {item.quantity? item.quantity:1}
-            </Text>
-            <TouchableOpacity
-              onPress={() => this.props.incrementCartItemQuantity(item)}
-              style={{
-                width: 40,
-                height: 50,
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 30}}>+</Text>
-            </TouchableOpacity>
-          </View>
+                  <TouchableOpacity
+                    onPress={() => this.props.decrementCartItemQuantity(item)}
+                    style={styles.minusButton}>
+                    <Text style={{fontSize: 30}}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantityButton}>
+                    {item.quantity ? item.quantity : 1}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => this.props.incrementCartItemQuantity(item)}
+                    style={styles.plusButton}>
+                    <Text style={{fontSize: 30}}>+</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -109,7 +90,10 @@ const mapStateToProps = (state: RootState) => ({
   cartList: state.cart.cartList,
 });
 
-export default connect(mapStateToProps, { incrementCartItemQuantity, decrementCartItemQuantity, })(Cart);
+export default connect(mapStateToProps, {
+  incrementCartItemQuantity,
+  decrementCartItemQuantity,
+})(Cart);
 
 const styles = StyleSheet.create({
   navBarContainer: {
@@ -226,5 +210,27 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 30,
     width: 130,
+  },
+
+  minusButton: {
+    width: 40,
+    height: 50,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quantityButton: {
+    backgroundColor: 'white',
+    width: 40,
+    height: 45,
+    textAlign: 'center',
+    paddingTop: 13,
+  },
+  plusButton: {
+    width: 40,
+    height: 50,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
