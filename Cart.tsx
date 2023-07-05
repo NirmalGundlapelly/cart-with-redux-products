@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -32,7 +31,7 @@ class Cart extends CartController {
         <TouchableHighlight>
           <View style={styles.productItem}>
             <View style={styles.itemCardContainer}>
-              <Image style={styles.thumbnail} source={{uri: item.thumbnail}} />
+              <Image resizeMode='stretch' style={styles.thumbnail} source={{uri: item.thumbnail}} />
               <View style={styles.itemPriceContainer}>
                 <Text style={styles.itemTitleText}>{item.title}</Text>
                 <Text style={styles.itemPrice}>
@@ -63,13 +62,18 @@ class Cart extends CartController {
 
   render() {
     const {cartList} = this.props;
+    let total = 0
+    const totatAmount = this.props.cartList.map(
+      each => total +=  each.price * each.quantity,
+    );
+    console.log('tot', totatAmount)
     return (
       <SafeAreaView>
         <View style={styles.productFlatContainer}>
           <>
             {cartList.length === 0 ? (
               <Text style={styles.noProductsAvailableText}>
-                {STRINGS.NO_PRODUCTS_AVAILABLE}
+                {STRINGS.EMPTY_CART}
               </Text>
             ) : (
               <FlatList
@@ -81,6 +85,22 @@ class Cart extends CartController {
             )}
           </>
         </View>
+        {this.props.cartList.length > 0 ? (
+          <TouchableOpacity
+            onPress={this.handleCheckout}
+            style={{
+              ...styles.addCartButton,
+              position: 'absolute',
+              bottom: 18,
+              alignSelf: 'center',
+              width: horizontalScale(200),
+              height: verticalScale(50),
+            }}>
+            <Text style={styles.buttonText}>
+              {STRINGS.CHECKOUT} ${total}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </SafeAreaView>
     );
   }
@@ -129,9 +149,8 @@ const styles = StyleSheet.create({
     height: verticalScale(170),
   },
   thumbnail: {
-    borderTopLeftRadius: 7,
-    borderBottomLeftRadius: 7,
-    height: verticalScale(150),
+    borderRadius:5,
+    height: verticalScale(140),
     width: horizontalScale(120),
   },
   itemTitleText: {
@@ -200,6 +219,7 @@ const styles = StyleSheet.create({
     color: STRINGS.WHITE,
     padding: moderateScale(7),
     textAlign: 'center',
+    marginTop: moderateScale(5),
   },
   buttonContainer: {
     backgroundColor: 'rgba(129, 138, 152, 0.2)',

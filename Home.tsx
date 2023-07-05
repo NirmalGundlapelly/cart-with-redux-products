@@ -26,7 +26,7 @@ class Home extends HomeController {
         <TouchableHighlight>
           <View style={styles.productItem}>
             <View style={styles.itemCardContainer}>
-              <Image style={styles.thumbnail} source={{uri: item.thumbnail}} />
+              <Image resizeMode='stretch' style={styles.thumbnail} source={{uri: item.thumbnail}} />
               <View style={styles.itemPriceContainer}>
                 <Text style={styles.itemTitleText}>{item.title}</Text>
                 <Text style={styles.itemPrice}>${item.price}.00</Text>
@@ -124,9 +124,8 @@ const styles = StyleSheet.create({
     height: verticalScale(170),
   },
   thumbnail: {
-    borderTopLeftRadius: 7,
-    borderBottomLeftRadius: 7,
-    height: verticalScale(150),
+    borderRadius:5,
+    height: verticalScale(140),
     width: horizontalScale(120),
   },
   itemTitleText: {
